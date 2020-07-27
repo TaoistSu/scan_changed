@@ -201,3 +201,6 @@ include_directories(
 
 add_executable(add_obstace src/add_obstace.cpp)
 target_link_libraries(add_obstace ${catkin_LIBRARIES})
+
+add_executable(avoid_obstace src/avoid_obstace.cpp)
+target_link_libraries(avoid_obstace ${catkin_LIBRARIES})

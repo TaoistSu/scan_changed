@@ -7,7 +7,7 @@ date: 2020-03-30
 --degreeStart和degreeEnd是设定左边的扇形范围
 --degreeStartII和degreeEndII是设定右边的扇形范围
 --avoid_distances是需要的车身前方避障距离
---car_width是车身宽度的一半，如果车宽2m，car_width设为2
+--car_width是车身宽度的一半，如果车宽2m，car_width设为
 */
 
 #include <iostream>
@@ -27,7 +27,7 @@ void scanCallback(const sensor_msgs::LaserScan &scan_aux)
 {
     //参数配置
     const double avoid_distances = 2.0; //需要的车身前方避障距离
-    const double car_width = 1.0;       //车身宽度
+    const double car_width = 0.8;       //车身宽度
     const double degreeStart = 0.0; //需要雷达前方的起始扇形范围
     const double degreeEnd = 90.0; //需要雷达前方的结束扇形范围
 
@@ -41,6 +41,7 @@ void scanCallback(const sensor_msgs::LaserScan &scan_aux)
     double startII = 0.0;
     double endII= 0.0;
     double theta = atan(car_width / avoid_distances);//弧度制的theta
+    double temp = 0.0;
     sensor_msgs::LaserScan scan = scan_aux;
     preDegree4range = scan.ranges.size()/360.0; //1度需要几个range,不能写360,会取整
     startI = int(degreeStart * preDegree4range);//开始角度的数组下标
@@ -76,7 +77,7 @@ void scanCallback(const sensor_msgs::LaserScan &scan_aux)
 	
     }
 
-    //发布主题scan1
+    //发布主题scan_obstacle
     pub.publish(scan);
 }
 
@@ -88,9 +89,9 @@ int main (int argc, char** argv)
   ros::NodeHandle nh;   //声明节点的名称
 
   // 为接受点云数据创建一个订阅节点
-  ros::Subscriber scan_sub = nh.subscribe("/scan", 100, scanCallback);
+  ros::Subscriber scan_sub = nh.subscribe("/scan1", 100, scanCallback);
   //创建ROS的发布节点
-  pub = nh.advertise<sensor_msgs::LaserScan> ("/scan1", 100);
+  pub = nh.advertise<sensor_msgs::LaserScan> ("/scan_obstacle", 100);
 
   // 回调
   ros::spin ();
